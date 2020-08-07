@@ -1,0 +1,65 @@
+//In this task we are using two input sensors:
+//	1.Motion Sensor
+//	2.Button press sensor
+//An interrupt from either of these two sensors will cause the red led to light on.
+
+// defining variables
+const uint8_t led_pin = 13;
+const uint8_t motion_pin = 2;
+const uint8_t button_pin = 3;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(motion_pin, INPUT);
+  pinMode(button_pin, INPUT);
+  
+  pinMode(led_pin, OUTPUT);
+
+  
+  //defining the interrupt to occur when there is a change in input value
+  //The function motion_interrupt or press_interrupt is then called and run depending on the interrupt
+  attachInterrupt(digitalPinToInterrupt(motion_pin), motion_interrupt, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(button_pin), press_interrupt, CHANGE);
+}
+
+void loop()
+{
+  	delay(10);
+}
+
+//This function will run when the motion interrupt is triggered
+void motion_interrupt()
+{
+  
+  if (digitalRead(motion_pin) == HIGH)
+  {
+    Serial.println("Motion detected");
+    digitalWrite(13, HIGH);
+    Serial.println("LED is on");
+  }
+  else
+  {
+    Serial.println("Motion not detected");
+    digitalWrite(13, LOW);
+    Serial.println("LED is off");
+  }
+
+}
+// This function will run when the press button interrupt is triggered
+void press_interrupt()
+{
+  	if (digitalRead(button_pin) == HIGH)
+  	{
+   		Serial.println("Button is pressed");
+      	digitalWrite(led_pin, HIGH);
+      	Serial.println("LED is on");
+    }
+    
+  	else 
+    {
+    	Serial.print("Button is not being pressed");
+     	digitalWrite(led_pin, LOW);
+     	Serial.println("LED is off");
+    }
+}
